@@ -10,6 +10,10 @@ contract(NjokuToken, accounts => {
       })
       .then(name => {
         assert.equal(name, "Njoku Token", "has the correct name");
+        return tokenInstace.symbol();
+      })
+      .then(symbol => {
+        assert.equal(symbol, "NTok", "has the correct symbol");
       });
   });
   it("sets the initial supply of token upon deployment", () => {

@@ -3,6 +3,7 @@ pragma solidity >=0.4.20 <0.7.0;
 
 contract NjokuToken {
     string public name = "Njoku Token";
+    string public symbol = "NTok";
     uint256 public totalSupply;
 
     mapping(address => uint256) public balanceOf;
