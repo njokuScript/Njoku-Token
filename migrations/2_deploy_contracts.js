@@ -1,5 +1,5 @@
-const TokenMigrations = artifact.require("njokuToken");
+const NjokuToken = artifacts.require("njokuToken");
 
 module.exports = function(deployer) {
-  deployer.deploy("TokenMigrations");
+  deployer.deploy(NjokuToken);
 };
