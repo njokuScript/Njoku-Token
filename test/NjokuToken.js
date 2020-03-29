@@ -46,6 +46,13 @@ contract(NjokuToken, accounts => {
     return NjokuToken.deployed()
       .then(instance => {
         tokenInstace = instance;
+        return tokenInstace.transfer
+          .call(accounts[1], 250000, {
+            from: accounts[0]
+          })
+          .then(success => {
+            assert.equal(success, true, "it returns true");
+          });
         return tokenInstace.transfer.call(accounts[1], 88989899999999);
       })
       .then(assert.fail)
@@ -54,9 +61,11 @@ contract(NjokuToken, accounts => {
           error.message.indexOf("revert") >= 0,
           "error message must contain value"
         );
-        return tokenInstace.transfer(accounts[1], 25000, { from: accounts[0] });
+        return tokenInstace.transfer(accounts[1], 250000, {
+          from: accounts[0]
+        });
       })
-      .then(reciept => {
+      .then(receipt => {
         assert.equal(receipt.logs.length, 1, "triggers one event");
         assert.equal(
           receipt.logs[0].event,
@@ -81,8 +90,11 @@ contract(NjokuToken, accounts => {
         return tokenInstace.balanceOf(accounts[1]);
       })
       .then(balance => {
-        assert.equal(balance.toNumber(), 25000, "Send 25000 to account 1");
+        assert.equal(balance.toNumber(), 250000, "Send 25000 to account 1");
         return tokenInstace.balanceOf(accounts[0]);
+      })
+      .then(balance => {
+        assert.equal(balance.toNumber(), 750000, "deducted token");
       });
   });
 });
