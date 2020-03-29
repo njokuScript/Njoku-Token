@@ -57,6 +57,27 @@ contract(NjokuToken, accounts => {
         return tokenInstace.transfer(accounts[1], 25000, { from: accounts[0] });
       })
       .then(reciept => {
+        assert.equal(receipt.logs.length, 1, "triggers one event");
+        assert.equal(
+          receipt.logs[0].event,
+          "Transfer",
+          'should be the "Transfer" event'
+        );
+        assert.equal(
+          receipt.logs[0].args._from,
+          accounts[0],
+          "logs the account the tokens are transferred from"
+        );
+        assert.equal(
+          receipt.logs[0].args._to,
+          accounts[1],
+          "logs the account the tokens are transferred to"
+        );
+        assert.equal(
+          receipt.logs[0].args._value,
+          250000,
+          "logs the transfer amount"
+        );
         return tokenInstace.balanceOf(accounts[1]);
       })
       .then(balance => {
