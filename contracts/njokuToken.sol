@@ -7,7 +7,7 @@ contract NjokuToken {
     //get the total number of tokn
     uint256 public totalSupply;
 
-    function Token() public payable returns (uint256) {
+    constructor() public {
         totalSupply = 1000000;
     }
 }
