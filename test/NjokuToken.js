@@ -14,6 +14,10 @@ contract(NjokuToken, accounts => {
       })
       .then(symbol => {
         assert.equal(symbol, "NTok", "has the correct symbol");
+        return tokenInstace.standard();
+      })
+      .then(standard => {
+        assert.equal(standard, "NjokuToken v1.0", "has the correct standard");
       });
   });
   it("sets the initial supply of token upon deployment", () => {
@@ -36,6 +40,28 @@ contract(NjokuToken, accounts => {
           1000000,
           "it allocates initial supply to admin balance"
         );
+      });
+  });
+  it("transfer token ownership", () => {
+    return NjokuToken.deployed()
+      .then(instance => {
+        tokenInstace = instance;
+        return tokenInstace.transfer.call(accounts[1], 88989899999999);
+      })
+      .then(assert.fail)
+      .catch(error => {
+        assert(
+          error.message.indexOf("revert") >= 0,
+          "error message must contain value"
+        );
+        return tokenInstace.transfer(accounts[1], 25000, { from: accounts[0] });
+      })
+      .then(reciept => {
+        return tokenInstace.balanceOf(accounts[1]);
+      })
+      .then(balance => {
+        assert.equal(balance.toNumber(), 25000, "Send 25000 to account 1");
+        return tokenInstace.balanceOf(accounts[0]);
       });
   });
 });
