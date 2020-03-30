@@ -9,6 +9,13 @@ contract NjokuToken {
     //transfer event
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
+    //aprroval event
+    event Approval(
+        address indexed _owner,
+        address indexed _spender,
+        uint256 _value
+    );
+
     mapping(address => uint256) public balanceOf;
 
     constructor(uint256 _initialSupply) public {
@@ -36,4 +43,16 @@ contract NjokuToken {
         emit Transfer(msg.sender, _to, _value);
         return true;
     }
+
+    //approval function
+    function approve(address _spender, uint256 _value)
+        public
+        returns (bool success)
+    {
+        //call event
+        emit Approval(msg.sender, _spender, _value);
+
+        return true;
+    }
+    //transferFrom function
 }

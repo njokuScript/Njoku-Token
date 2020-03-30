@@ -46,6 +46,8 @@ contract(NjokuToken, accounts => {
     return NjokuToken.deployed()
       .then(instance => {
         tokenInstace = instance;
+
+        return tokenInstace.transfer.call(accounts[1], 88989899999999);
         return tokenInstace.transfer
           .call(accounts[1], 250000, {
             from: accounts[0]
@@ -53,7 +55,6 @@ contract(NjokuToken, accounts => {
           .then(success => {
             assert.equal(success, true, "it returns true");
           });
-        return tokenInstace.transfer.call(accounts[1], 88989899999999);
       })
       .then(assert.fail)
       .catch(error => {
@@ -96,5 +97,39 @@ contract(NjokuToken, accounts => {
       .then(balance => {
         assert.equal(balance.toNumber(), 750000, "deducted token");
       });
+  });
+  it("approves delegatd transfer", () => {
+    return NjokuToken.deployed().then(instance => {
+      tokenInstace = instance;
+      return tokenInstace.approve
+        .call(accounts[1], 100)
+        .then(success => {
+          assert.equal(success, true, "it returns true");
+          return tokenInstace.approve(accounts[1], 100, { from: accounts[0] });
+        })
+        .then(receipt => {
+          assert.equal(receipt.logs.length, 1, "triggers one event");
+          assert.equal(
+            receipt.logs[0].event,
+            "Approval",
+            'should be the "Approval" event'
+          );
+          assert.equal(
+            receipt.logs[0].args._owner,
+            accounts[0],
+            "logs the account the tokens are authorized by"
+          );
+          assert.equal(
+            receipt.logs[0].args._spender,
+            accounts[1],
+            "logs the account the tokens are authorized to"
+          );
+          assert.equal(
+            receipt.logs[0].args._value,
+            100,
+            "logs the transfer amount"
+          );
+        });
+    });
   });
 });
